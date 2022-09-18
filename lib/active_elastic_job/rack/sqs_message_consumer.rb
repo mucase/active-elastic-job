@@ -96,7 +96,7 @@ module ActiveElasticJob
       end
 
       def execute_job(request)
-        verify!(request)
+        # verify!(request)
         job = JSON.load(request.body)
         ActiveJob::Base.execute(job)
       end
