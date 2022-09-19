@@ -42,7 +42,7 @@ module ActiveElasticJob
           if periodic_task?(request)
             execute_periodic_task(request)
             return OK_RESPONSE
-          elsif originates_from_gem?(request)
+          else # originates_from_gem?(request)
             begin
               execute_job(request)
             rescue ActiveElasticJob::MessageVerifier::InvalidDigest => e
