@@ -33,7 +33,7 @@ module ActiveElasticJob
 
       def call(env) #:nodoc:
         request = ActionDispatch::Request.new env
-        Rails.logger.info "RUNNING job call1 with headers: #{request.headers['HTTP_X_AWS_SQSD_ATTR_MESSAGE_DIGEST'.freeze]} body: #{JSON.load(request.body)}"
+        Rails.logger.info "RUNNING job call1 with body: #{JSON.load(request.body)}"
         if enabled? && aws_sqsd?(request)
           unless request.local? || sent_from_docker_host?(request)
             return FORBIDDEN_RESPONSE
