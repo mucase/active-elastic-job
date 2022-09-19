@@ -33,12 +33,12 @@ module ActiveElasticJob
 
       def call(env) #:nodoc:
         request = ActionDispatch::Request.new env
-        Rails.logger.info "RUNNING job call with headers: #{JSON.load(request.headers)} body: #{JSON.load(request.body)}"
+        Rails.logger.info "RUNNING job call1 with headers: #{JSON.load(request.headers)} body: #{JSON.load(request.body)}"
         if enabled? && aws_sqsd?(request)
           unless request.local? || sent_from_docker_host?(request)
             return FORBIDDEN_RESPONSE
           end
-
+          Rails.logger.info "RUNNING job call2 with headers: #{JSON.load(request.headers)} body: #{JSON.load(request.body)}"
           if periodic_task?(request)
             execute_periodic_task(request)
             return OK_RESPONSE
