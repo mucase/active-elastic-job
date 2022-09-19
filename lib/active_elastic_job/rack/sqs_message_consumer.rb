@@ -33,6 +33,7 @@ module ActiveElasticJob
 
       def call(env) #:nodoc:
         request = ActionDispatch::Request.new env
+        puts "RUNNING call with headers #{request.headers}"
         if enabled? && aws_sqsd?(request)
           unless request.local? || sent_from_docker_host?(request)
             return FORBIDDEN_RESPONSE
@@ -97,6 +98,7 @@ module ActiveElasticJob
 
       def execute_job(request)
         # verify!(request)
+        puts "RUNNING execute_job #{request}"
         job = JSON.load(request.body)
         ActiveJob::Base.execute(job)
       end
