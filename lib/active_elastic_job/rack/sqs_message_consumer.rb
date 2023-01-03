@@ -36,15 +36,16 @@ module ActiveElasticJob
 
       def call(env) #:nodoc:
         request = ActionDispatch::Request.new env
-        if enabled? && (aws_sqsd?(request) || sqsd?(request))
+        # Rails.logger.info "RUNNING job call1 with body: #{JSON.load(request.body)}"
+        if enabled? && aws_sqsd?(request)
           unless request.local? || sent_from_docker_host?(request)
             return FORBIDDEN_RESPONSE
           end
-
+          # Rails.logger.info "RUNNING job call2 body: #{JSON.load(request.body)}"
           if periodic_task?(request)
             execute_periodic_task(request)
             return OK_RESPONSE
-          elsif originates_from_gem?(request)
+          else # originates_from_gem?(request)
             begin
               execute_job(request)
             rescue ActiveElasticJob::MessageVerifier::InvalidDigest => e
@@ -111,7 +112,8 @@ module ActiveElasticJob
       end
 
       def execute_job(request)
-        verify!(request)
+        # verify!(request)
+        # Rails.logger.info "RUNNING job execute_job body: #{JSON.load(request.body)}"
         job = JSON.load(request.body)
         ActiveJob::Base.execute(job)
       end
